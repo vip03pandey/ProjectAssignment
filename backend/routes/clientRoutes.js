@@ -1,6 +1,7 @@
 // routes/clientQueryRoutes.js
 const express = require('express');
 const router = express.Router();
+const Quote = require('../models/Quote');
 const Query = require('../models/Query');
 const { protect, clientOnly } = require('../middlewares/authmiddleware');
 const multer = require('multer');
@@ -92,5 +93,109 @@ router.get('/my-queries', protect, clientOnly, async (req, res) => {
     res.status(500).json({ message: 'Failed to fetch queries' });
   }
 });
+
+router.get('/query/:id',protect,clientOnly,async(req,res)=>{
+    try{
+        const query=await Query.findById(req.params.id);
+        if(!query){
+            return res.status(404).json({message:"Query not found"});
+        }
+        res.json(query);
+    }
+    catch(error){
+        console.error(error);
+        res.status(500).json({message:"Failed to fetch query"});
+    }
+})
+
+
+// GET /api/client-query/:id/quotes -> getting quotes for a specific query
+router.get('/:id/quotes', protect, clientOnly, async (req, res) => {
+  try {
+    const queryId = req.params.id;
+    const query = await Query.findById(queryId);
+    if (!query || query.client.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: 'Access denied or query not found' });
+    }
+
+    const quotes = await Quote.find({ query: queryId }).populate('provider', 'name email'); 
+
+    res.json(quotes);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Failed to fetch quotes' });
+  }
+});
+
+router.patch('/:quoteId/approve', protect, clientOnly, async (req, res) => {
+  try {
+    const quote = await Quote.findById(req.params.quoteId).populate('query');
+    if (!quote) {
+      return res.status(404).json({ message: 'Quote not found' });
+    }
+
+    const query = await Query.findById(quote.query._id);
+
+    if (!query) {
+      return res.status(404).json({ message: 'Associated query not found' });
+    }
+    if (query.client.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: 'You are not authorized to approve this quote' });
+    }
+    const alreadyApproved = await Quote.findOne({ query: query._id, approved: true });
+    if (alreadyApproved) {
+      return res.status(400).json({ message: 'Another quote has already been approved for this query' });
+    }
+    quote.approved = true;
+    await quote.save();
+
+    query.status = 'Approved';
+    await query.save();
+
+    res.status(200).json({
+      message: 'Quote approved successfully',
+      approvedQuote: quote,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Failed to approve quote', error: error.message });
+  }
+});
+
+
+router.patch('/:quoteId/reject', protect, clientOnly, async (req, res) => {
+  try {
+    const quote = await Quote.findById(req.params.quoteId).populate('query');
+    if (!quote) {
+      return res.status(404).json({ message: 'Quote not found' });
+    }
+
+    const query = await Query.findById(quote.query._id);
+    if (!query) {
+      return res.status(404).json({ message: 'Associated query not found' });
+    }
+
+    if (query.client.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: 'You are not authorized to reject this quote' });
+    }
+
+    if (quote.approved === true) {
+      return res.status(400).json({ message: 'Cannot reject an already approved quote' });
+    }
+
+    quote.approved = false;
+    await quote.save();
+
+    res.status(200).json({
+      message: 'Quote rejected successfully',
+      rejectedQuote: quote,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Failed to reject quote', error: error.message });
+  }
+});
+
+
 
 module.exports = router;

@@ -3,6 +3,8 @@ const User = require('../models/User');
 
 const protect = async (req, res, next) => {
   let token;
+  
+  console.log('PROTECT MIDDLEWARE - Headers:', req.headers.authorization);
 
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     try {
@@ -12,18 +14,16 @@ const protect = async (req, res, next) => {
       // FIXED HERE 👇
       req.user = await User.findById(decoded.user).select('-password');
 
-      next();
+      return next();
     } catch (error) {
       if (error.name === 'TokenExpiredError') {
         return res.status(401).json({ message: 'Token expired. Please log in again.' });
       }
-      res.status(401).json({ message: 'Not authorized, token failed' });
+      return res.status(401).json({ message: 'Not authorized, token failed' });
     }
   }
 
-  if (!token) {
-    res.status(401).json({ message: 'No token, authorization denied' });
-  }
+  return res.status(401).json({ message: 'No token, authorization denied' });
 };
 
 const clientOnly = (req, res, next) => {
