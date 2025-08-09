@@ -34,7 +34,7 @@ const clientOnly = (req, res, next) => {
     });
   }
 
-  if (req.user.role !== 'Client') {
+  if (req.user.role !== 'client') {
     return res.status(403).json({
       success: false,
       message: 'Access denied. This action is only available to clients.'

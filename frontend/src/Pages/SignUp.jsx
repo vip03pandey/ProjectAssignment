@@ -6,17 +6,19 @@ import { Label } from "../Components/ui/label";
 import { Input } from "../Components/ui/input";
 import { cn } from "../lib/utils";
 import { Boxes } from "../Components/ui/background-boxes";
-
+import axios from "axios";
+import { useAuth } from "../context/AuthContext";
 export function SignUp() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const defaultRole = searchParams.get("role") || "client";
-  const navigate=useNavigate()
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
   const [role, setRole] = useState(defaultRole);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name,setName]=useState("")
+  const [name, setName] = useState("");
 
   useEffect(() => {
     const urlRole = searchParams.get("role");
@@ -28,26 +30,50 @@ export function SignUp() {
   const handleRoleChange = (e) => {
     const selectedRole = e.target.value;
     setRole(selectedRole);
-    navigate(`/signup?role=${selectedRole}`); // This updates the route
+    navigate(`/signup?role=${selectedRole}`); 
   };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Signing up with:", { email, password, role });
+  
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/signup`, {
+        name,
+        email,
+        password,
+        role,
+      });
+
+      const data = response.data;
+  
+      if (data.success) {
+        login(data.user, data.token);
+  
+        alert("Signup successful!");
+        navigate("/dashboard") 
+      } else {
+        alert(data.message || "Signup failed");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      if (error.response) {
+        const errorMessage = error.response.data.message || "Signup failed";
+        alert(errorMessage);
+      } else {
+        alert("Something went wrong. Please try again.");
+      }
+    }
   };
+  
 
   return (
     <div className="min-h-screen relative w-full overflow-hidden bg-black flex flex-col items-center justify-center">
       <div className="absolute inset-0 w-full h-full bg-black z-20 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
       <div className="absolute inset-0 z-0">
       <Boxes/>
-      {/* Background Pattern */}
       <div className="absolute inset-0 opacity-20">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent"></div>
       </div>
       </div>
-
-      {/* Floating shapes */}
       <div className="absolute top-10 left-10 w-20 h-20 bg-blue-500/20 rounded-full blur-xl animate-pulse"></div>
       <div className="absolute top-40 right-20 w-32 h-32 bg-purple-500/20 rounded-full blur-xl animate-pulse delay-1000"></div>
       <div className="absolute bottom-20 left-20 w-24 h-24 bg-indigo-500/20 rounded-full blur-xl animate-pulse delay-500"></div>
