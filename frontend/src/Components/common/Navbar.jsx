@@ -14,6 +14,17 @@ import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 
 export function NavbarDemo() {
+  const { user, logout, loading } = useAuth();
+  const navigate = useNavigate();
+  
+ 
+  const getDashboardLink = () => {
+    if (user?.role === 'provider') {
+      return '/service-provider';
+    }
+    return '/dashboard';
+  };
+
   const navItems = [
     {
       name: "About Us",
@@ -24,14 +35,12 @@ export function NavbarDemo() {
       link: "#pricing",
     },
     {
-      name:"Dashboard",
-      link:"/dashboard"
+      name: "Dashboard",
+      link: getDashboardLink()
     }
   ];
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const navigate = useNavigate();
-  const { user, logout, loading } = useAuth();
 
   const handleLogout = () => {
     logout();
@@ -69,7 +78,7 @@ export function NavbarDemo() {
           </div>
         </NavBody>
 
-        {/* Mobile Navigation */}
+   
         <MobileNav>
           <MobileNavHeader>
             <NavbarLogo />

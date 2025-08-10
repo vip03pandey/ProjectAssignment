@@ -49,7 +49,11 @@ export function SignUp() {
         login(data.user, data.token);
   
         alert("Signup successful!");
-        navigate("/dashboard") 
+        if (data.user.role === 'provider') {
+          navigate("/service-provider");
+        } else {
+          navigate("/dashboard");
+        } 
       } else {
         alert(data.message || "Signup failed");
       }

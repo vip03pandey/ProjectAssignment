@@ -52,7 +52,7 @@ const providerOnly = (req, res, next) => {
     });
   }
 
-  if (req.user.role !== 'Provider') {
+  if (req.user.role !== 'provider') {
     return res.status(403).json({
       success: false,
       message: 'Access denied. This action is only available to providers.'

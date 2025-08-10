@@ -13,7 +13,7 @@ export function BackgroundLinesDemo() {
       <div className="flex flex-col items-center justify-center w-full px-4 sm:px-6 lg:px-8 
                       pt-20 pb-8 sm:pt-24 sm:pb-12 lg:pt-16 lg:pb-16">
         
-        {/* Main Heading - Added proper top spacing */}
+
         <h1
           className="bg-clip-text text-transparent text-center bg-gradient-to-b from-neutral-900 to-neutral-700 dark:from-neutral-600 dark:to-white 
           text-2xl leading-tight
@@ -34,7 +34,7 @@ export function BackgroundLinesDemo() {
           Regulatory Expertise
         </h1>
 
-        {/* Subtitle */}
+
         <p
           className="text-center text-neutral-700 dark:text-neutral-400 
           text-sm leading-relaxed mb-6
@@ -45,7 +45,7 @@ export function BackgroundLinesDemo() {
           Upload your regulatory questions with background context and receive professional evaluation
         </p>
 
-        {/* Action Buttons */}
+
         <div className="flex flex-col w-full max-w-sm gap-3 mb-8 sm:flex-row sm:max-w-md sm:gap-4 sm:mb-12 z-20 relative">
           <button className="w-full px-6 py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl"
           onClick={() => redirectToSignup("client")}>
@@ -57,7 +57,7 @@ export function BackgroundLinesDemo() {
           </button>
         </div>
 
-        {/* Quick Stats */}
+
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-8 mb-8 sm:mb-12 w-full max-w-2xl text-center z-20 relative">
           <div className="flex flex-col">
             <span className="text-lg sm:text-xl lg:text-2xl font-bold text-blue-600 dark:text-blue-400">500+</span>

@@ -8,14 +8,14 @@ const StatusBadge = ({ status }) => {
     switch (status?.toLowerCase()) {
       case 'closed':
       case 'submitted':
-        return { color: 'bg-green-100 text-green-800', icon: <CheckCircle className="w-4 h-4" /> };
+        return { color: 'bg-emerald-50 text-emerald-700 border border-emerald-200', icon: <CheckCircle className="w-5 h-5" /> };
       case 'approved':
-        return { color: 'bg-blue-100 text-blue-800', icon: <CheckCircle className="w-4 h-4" /> };
+        return { color: 'bg-sky-50 text-sky-700 border border-sky-200', icon: <CheckCircle className="w-5 h-5" /> };
       case 'quoted':
-        return { color: 'bg-yellow-100 text-yellow-800', icon: <FileText className="w-4 h-4" /> };
+        return { color: 'bg-amber-50 text-amber-700 border border-amber-200', icon: <FileText className="w-5 h-5" /> };
       case 'new':
       default:
-        return { color: 'bg-gray-100 text-gray-800', icon: <Clock className="w-4 h-4" /> };
+        return { color: 'bg-slate-50 text-slate-700 border border-slate-200', icon: <Clock className="w-5 h-5" /> };
     }
   };
 
@@ -23,7 +23,7 @@ const StatusBadge = ({ status }) => {
 
   return (
     <span
-      className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${color} transition-all duration-300 hover:shadow-md`}
+      className={`inline-flex items-center px-4 py-2 rounded-xl text-sm font-semibold ${color} transition-all duration-300 hover:shadow-md hover:scale-105`}
       role="status"
       aria-label={`Status: ${status || 'New'}`}
     >
@@ -37,13 +37,13 @@ const PriorityBadge = ({ priority }) => {
   const getPriorityConfig = (priority) => {
     switch (priority?.toLowerCase()) {
       case 'high':
-        return 'bg-red-100 text-red-800';
+        return 'bg-rose-50 text-rose-700 border border-rose-200';
       case 'medium':
-        return 'bg-orange-100 text-orange-800';
+        return 'bg-orange-50 text-orange-700 border border-orange-200';
       case 'low':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-50 text-green-700 border border-green-200';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-slate-50 text-slate-700 border border-slate-200';
     }
   };
 
@@ -51,7 +51,7 @@ const PriorityBadge = ({ priority }) => {
 
   return (
     <span
-      className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getPriorityConfig(priority)} transition-all duration-300 hover:shadow-md`}
+      className={`inline-flex items-center px-4 py-2 rounded-xl text-sm font-semibold ${getPriorityConfig(priority)} transition-all duration-300 hover:shadow-md hover:scale-105`}
       role="status"
       aria-label={`Priority: ${priority}`}
     >
@@ -98,18 +98,18 @@ const QueryDetail = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="w-full max-w-4xl space-y-4">
-          <div className="animate-pulse space-y-4">
-            <div className="h-8 bg-gray-200 rounded w-1/4"></div>
-            <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <div className="h-6 bg-gray-200 rounded w-1/3 mb-4"></div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
+        <div className="w-full max-w-5xl space-y-6">
+          <div className="animate-pulse space-y-6">
+            <div className="h-10 bg-slate-200 rounded-lg w-1/4"></div>
+            <div className="h-6 bg-slate-200 rounded w-1/2"></div>
+            <div className="bg-white p-8 rounded-xl shadow-sm border">
+              <div className="h-8 bg-slate-200 rounded w-1/3 mb-6"></div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="h-5 bg-slate-200 rounded w-3/4"></div>
+                <div className="h-5 bg-slate-200 rounded w-3/4"></div>
+                <div className="h-5 bg-slate-200 rounded w-3/4"></div>
+                <div className="h-5 bg-slate-200 rounded w-3/4"></div>
               </div>
             </div>
           </div>
@@ -120,13 +120,13 @@ const QueryDetail = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="bg-white p-6 rounded-lg shadow-md text-center">
-          <AlertCircle className="w-8 h-8 text-red-500 mx-auto mb-2" />
-          <p className="text-red-500 text-lg font-medium">{error}</p>
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
+        <div className="bg-white p-8 rounded-xl shadow-sm border text-center">
+          <AlertCircle className="w-12 h-12 text-rose-500 mx-auto mb-4" />
+          <p className="text-rose-600 text-xl font-semibold">{error}</p>
           <button
             onClick={() => navigate(-1)}
-            className="mt-4 inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300"
+            className="mt-6 inline-flex items-center px-6 py-3 bg-slate-800 text-white rounded-xl hover:bg-slate-700 transition-all duration-300 font-medium text-lg hover:shadow-lg hover:scale-105"
           >
             Back to Dashboard
           </button>
@@ -138,25 +138,25 @@ const QueryDetail = () => {
   if (!query) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
-        <header className="mb-8">
+    <div className="min-h-screen bg-slate-50 py-8 px-6 sm:px-8 lg:px-12">
+      <div className="max-w-5xl mx-auto">
+        <header className="mb-10">
           <button
             onClick={() => navigate(-1)}
-            className="group inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
+            className="group inline-flex items-center text-slate-600 hover:text-slate-800 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-slate-500 rounded-lg p-2 font-medium text-lg hover:bg-white hover:shadow-sm"
             aria-label="Back to Dashboard"
           >
-            <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform duration-300" />
+            <ArrowLeft className="w-6 h-6 mr-3 group-hover:-translate-x-1 transition-transform duration-300" />
             Back to Dashboard
           </button>
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mt-4 gap-4">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mt-6 gap-6">
+            <div className="flex-1">
+              <h1 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-2 leading-tight">
                 {query.title || 'Untitled Query'}
               </h1>
-              <p className="text-gray-500 text-sm mt-1">Query ID: {query._id}</p>
+              <p className="text-slate-500 text-lg font-medium">Query ID: {query._id}</p>
             </div>
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-4">
               <StatusBadge status={query.status} />
               <PriorityBadge priority={query.priority} />
             </div>
@@ -164,73 +164,78 @@ const QueryDetail = () => {
         </header>
 
         {/* Main Content */}
-        <main className="space-y-6">
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="p-6 border-b border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-900">Query Details</h2>
+        <main className="space-y-8">
+          <div className="bg-white rounded-2xl shadow-sm border overflow-hidden">
+            <div className="px-8 py-6 border-b border-slate-100 bg-slate-50">
+              <h2 className="text-2xl font-bold text-slate-900">Query Details</h2>
             </div>
-            <div className="p-6 space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm">
+            <div className="p-8 space-y-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 text-base">
                 {query.regulatoryArea && (
-                  <div>
-                    <span className="font-medium text-gray-600">Regulatory Area:</span>
-                    <p className="text-gray-900">{query.regulatoryArea}</p>
+                  <div className="space-y-2">
+                    <span className="font-semibold text-slate-600 text-lg">Regulatory Area</span>
+                    <p className="text-slate-900 font-medium text-lg">{query.regulatoryArea}</p>
                   </div>
                 )}
-                <div>
-                  <span className="font-medium text-gray-600">Created:</span>
-                  <p className="text-gray-900 flex items-center">
-                    <Calendar className="w-4 h-4 mr-2 text-gray-500" />
+                <div className="space-y-2">
+                  <span className="font-semibold text-slate-600 text-lg">Created</span>
+                  <p className="text-slate-900 flex items-center font-medium text-lg">
+                    <Calendar className="w-5 h-5 mr-3 text-slate-500" />
                     {formatDate(query.createdAt)}
                   </p>
                 </div>
                 {query.deadline && (
-                  <div>
-                    <span className="font-medium text-gray-600">Deadline:</span>
-                    <p className="text-gray-900 flex items-center">
-                      <Calendar className="w-4 h-4 mr-2 text-gray-500" />
+                  <div className="space-y-2">
+                    <span className="font-semibold text-slate-600 text-lg">Deadline</span>
+                    <p className="text-slate-900 flex items-center font-medium text-lg">
+                      <Calendar className="w-5 h-5 mr-3 text-rose-500" />
                       {formatDate(query.deadline)}
                     </p>
                   </div>
                 )}
-                <div>
-                  <span className="font-medium text-gray-600">Status:</span>
-                  <p className="text-gray-900">{query.status || 'New'}</p>
+                <div className="space-y-2">
+                  <span className="font-semibold text-slate-600 text-lg">Status</span>
+                  <p className="text-slate-900 font-medium text-lg">{query.status || 'New'}</p>
                 </div>
               </div>
 
               {query.context && (
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Context</h3>
-                  <p className="text-gray-600 leading-relaxed">{query.context}</p>
+                <div className="bg-slate-50 p-6 rounded-xl border">
+                  <h3 className="text-2xl font-bold text-slate-900 mb-4">Context</h3>
+                  <p className="text-slate-700 leading-relaxed text-lg font-medium">{query.context}</p>
                 </div>
               )}
 
               {query.questions && query.questions.length > 0 && (
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Questions</h3>
-                  <ul className="list-disc pl-5 space-y-2 text-gray-600">
+                <div className="bg-blue-50 p-6 rounded-xl border border-blue-100">
+                  <h3 className="text-2xl font-bold text-slate-900 mb-4">Questions</h3>
+                  <ul className="space-y-3">
                     {query.questions.map((question, index) => (
-                      <li key={index} className="leading-relaxed">{question}</li>
+                      <li key={index} className="flex items-start">
+                        <span className="flex-shrink-0 w-8 h-8 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center text-sm font-bold mr-4 mt-1">
+                          {index + 1}
+                        </span>
+                        <span className="text-slate-700 leading-relaxed text-lg font-medium">{question}</span>
+                      </li>
                     ))}
                   </ul>
                 </div>
               )}
 
               {query.attachments && query.attachments.length > 0 && (
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Attachments</h3>
-                  <div className="space-y-3">
+                <div className="bg-green-50 p-6 rounded-xl border border-green-100">
+                  <h3 className="text-2xl font-bold text-slate-900 mb-4">Attachments</h3>
+                  <div className="space-y-4">
                     {query.attachments.map((attachment, index) => (
                       <a
                         key={index}
                         href={attachment}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group flex items-center text-sm text-blue-600 hover:text-blue-800 transition-colors duration-300"
+                        className="group flex items-center text-lg font-medium text-blue-600 hover:text-blue-800 transition-all duration-300 p-4 bg-white rounded-xl border hover:shadow-md hover:scale-[1.02]"
                         aria-label={`Download attachment: ${attachment}`}
                       >
-                        <FileText className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" />
+                        <FileText className="w-6 h-6 mr-4 group-hover:scale-110 transition-transform duration-300 text-blue-500" />
                         <span className="truncate">{attachment}</span>
                       </a>
                     ))}

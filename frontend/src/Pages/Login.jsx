@@ -33,7 +33,11 @@ export function SignIn() {
       if (data.success) {
         login(data.user, data.token); 
         alert("Login successful!");
-        navigate("/dashboard");
+        if (data.user.role === 'provider') {
+          navigate("/service-provider");
+        } else {
+          navigate("/dashboard");
+        }
       } else {
         alert(data.message || "Login failed");
       }
