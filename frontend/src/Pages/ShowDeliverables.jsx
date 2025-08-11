@@ -73,30 +73,30 @@ const ClientDeliverables = () => {
 
   const getFileIcon = (fileName) => {
     const extension = fileName.split('.').pop().toLowerCase();
-    const iconClass = "w-6 h-6";
+    const iconClass = "w-7 h-7";
     
     switch (extension) {
       case 'pdf':
-        return <FileText className={`${iconClass} text-red-500`} />;
+        return <FileText className={`${iconClass} text-red-600`} />;
       case 'doc':
       case 'docx':
-        return <FileText className={`${iconClass} text-blue-500`} />;
+        return <FileText className={`${iconClass} text-blue-600`} />;
       case 'xls':
       case 'xlsx':
-        return <FileText className={`${iconClass} text-green-500`} />;
+        return <FileText className={`${iconClass} text-emerald-600`} />;
       case 'ppt':
       case 'pptx':
-        return <FileText className={`${iconClass} text-orange-500`} />;
+        return <FileText className={`${iconClass} text-orange-600`} />;
       case 'jpg':
       case 'jpeg':
       case 'png':
       case 'gif':
-        return <Eye className={`${iconClass} text-purple-500`} />;
+        return <Eye className={`${iconClass} text-purple-600`} />;
       case 'zip':
       case 'rar':
-        return <FileText className={`${iconClass} text-gray-500`} />;
+        return <FileText className={`${iconClass} text-slate-600`} />;
       default:
-        return <FileText className={`${iconClass} text-gray-400`} />;
+        return <FileText className={`${iconClass} text-slate-500`} />;
     }
   };
 
@@ -104,21 +104,21 @@ const ClientDeliverables = () => {
     switch (status) {
       case 'Submitted':
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-            <CheckCircle2 className="w-4 h-4 mr-1" />
+          <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200">
+            <CheckCircle2 className="w-4 h-4 mr-2" />
             Completed
           </span>
         );
       case 'In Progress':
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-            <Clock className="w-4 h-4 mr-1" />
+          <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-blue-100 text-blue-800 border border-blue-200">
+            <Clock className="w-4 h-4 mr-2" />
             In Progress
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
+          <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-slate-100 text-slate-800 border border-slate-200">
             {status}
           </span>
         );
@@ -127,10 +127,10 @@ const ClientDeliverables = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="flex items-center space-x-2">
-          <Loader2 className="w-6 h-6 animate-spin text-indigo-600" />
-          <span className="text-gray-600">Loading deliverables...</span>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center">
+        <div className="flex items-center space-x-3 bg-white px-8 py-6 rounded-2xl shadow-lg border border-slate-200">
+          <Loader2 className="w-7 h-7 animate-spin text-indigo-600" />
+          <span className="text-slate-700 font-medium text-lg">Loading deliverables...</span>
         </div>
       </div>
     );
@@ -138,26 +138,26 @@ const ClientDeliverables = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 py-12 px-4">
+      <div className="min-h-screen bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50 py-12 px-4">
         <div className="max-w-4xl mx-auto">
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <div className="flex items-center justify-center text-red-600 mb-4">
-              <AlertCircle className="w-12 h-12" />
+          <div className="bg-white rounded-2xl shadow-xl p-8 border border-red-100">
+            <div className="flex items-center justify-center text-red-600 mb-6">
+              <AlertCircle className="w-16 h-16" />
             </div>
-            <h2 className="text-2xl font-bold text-center text-gray-900 mb-2">
+            <h2 className="text-3xl font-bold text-center text-slate-900 mb-3 font-serif">
               Error Loading Deliverables
             </h2>
-            <p className="text-center text-gray-600 mb-6">{error}</p>
-            <div className="flex justify-center space-x-4">
+            <p className="text-center text-slate-600 mb-8 text-lg leading-relaxed">{error}</p>
+            <div className="flex justify-center space-x-6">
               <button
-                onClick={() => navigate('/client')}
-                className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+                onClick={() => navigate('/dashboard')}
+                className="px-8 py-4 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl"
               >
                 Back to Dashboard
               </button>
               <button
                 onClick={fetchDeliverables}
-                className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                className="px-8 py-4 border-2 border-slate-300 text-slate-700 font-semibold rounded-xl hover:bg-slate-50 transition-all duration-300"
               >
                 Try Again
               </button>
@@ -168,60 +168,66 @@ const ClientDeliverables = () => {
     );
   }
 
-
   const latestDeliverable = deliverables.length > 0 ? deliverables[0] : null;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 py-12 px-4">
+      <div className="max-w-5xl mx-auto">
         <button
           onClick={() => navigate('/client')}
-          className="flex items-center text-indigo-600 hover:text-indigo-800 mb-6"
+          className="flex items-center text-indigo-700 hover:text-indigo-900 mb-8 font-medium transition-colors duration-200"
         >
           <ChevronRight className="w-5 h-5 rotate-180 mr-2" />
           Back to Dashboard
         </button>
 
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Project Deliverables</h1>
+        <div className="text-center mb-12">
+          <h1 className="text-5xl font-bold text-slate-900 mb-6 font-serif leading-tight">
+            Project Deliverables
+          </h1>
           {query && (
-            <div className="space-y-2">
-              <p className="text-xl text-gray-600">{query.title}</p>
-              <div className="flex items-center justify-center space-x-4">
-                <span className="text-sm text-gray-500">Query ID: {queryId}</span>
+            <div className="space-y-4">
+              <p className="text-2xl text-slate-700 font-medium leading-relaxed">{query.title}</p>
+              <div className="flex items-center justify-center space-x-6 flex-wrap gap-2">
+                <span className="text-sm text-slate-500 font-mono bg-slate-100 px-3 py-1 rounded-lg">
+                  Query ID: {queryId}
+                </span>
                 {getStatusBadge(query.status)}
               </div>
             </div>
           )}
         </div>
 
-
-        <div className="space-y-6">
+        <div className="space-y-8">
           {query && (
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">Project Details</h2>
-              <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-200">
+              <h2 className="text-3xl font-bold text-slate-900 mb-6 font-serif">Project Details</h2>
+              <div className="grid md:grid-cols-2 gap-8">
                 <div>
-                  <h3 className="text-lg font-medium text-gray-700 mb-2">Description</h3>
-                  <p className="text-gray-600">{query.description}</p>
+                  <h3 className="text-xl font-semibold text-slate-800 mb-3">Description</h3>
+                  <p className="text-slate-600 leading-relaxed text-lg">{query.description}</p>
                 </div>
-                <div className="space-y-4">
+                <div className="space-y-6">
                   <div>
-                    <h4 className="font-medium text-gray-700">Service Provider</h4>
-                    <div className="flex items-center mt-1">
-                      <User className="w-4 h-4 text-gray-400 mr-2" />
-                      <span className="text-gray-600">
-                        {query.assignedProvider?.name || 'Not assigned'}
+                    <h4 className="font-semibold text-slate-800 text-lg mb-2">Service Provider</h4>
+                    <div className="flex items-center">
+                      <User className="w-5 h-5 text-slate-400 mr-3" />
+                      <span className="text-slate-600 font-medium text-lg">
+                        {latestDeliverable?.provider?.name || 'Not assigned'}
                       </span>
                     </div>
                   </div>
                   <div>
-                    <h4 className="font-medium text-gray-700">Created</h4>
-                    <div className="flex items-center mt-1">
-                      <Calendar className="w-4 h-4 text-gray-400 mr-2" />
-                      <span className="text-gray-600">
-                        {new Date(query.createdAt).toLocaleDateString()}
+                    <h4 className="font-semibold text-slate-800 text-lg mb-2">Created</h4>
+                    <div className="flex items-center">
+                      <Calendar className="w-5 h-5 text-slate-400 mr-3" />
+                      <span className="text-slate-600 font-medium text-lg">
+                        {new Date(query.createdAt).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        })}
                       </span>
                     </div>
                   </div>
@@ -230,26 +236,25 @@ const ClientDeliverables = () => {
             </div>
           )}
 
-
           {latestDeliverable ? (
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-6">Delivered Files</h2>
+            <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-200">
+              <h2 className="text-3xl font-bold text-slate-900 mb-8 font-serif">Delivered Files</h2>
+              
               {latestDeliverable.message && (
-                <div className="mb-6 p-4 bg-blue-50 rounded-lg border-l-4 border-blue-400">
+                <div className="mb-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border-l-4 border-blue-500">
                   <div className="flex items-start">
-                    <MessageSquare className="w-5 h-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
+                    <MessageSquare className="w-6 h-6 text-blue-600 mt-1 mr-4 flex-shrink-0" />
                     <div>
-                      <h4 className="font-medium text-blue-900">Message from Provider</h4>
-                      <p className="text-blue-800 mt-1">{latestDeliverable.message}</p>
+                      <h4 className="font-bold text-blue-900 text-lg mb-2">Message from Provider</h4>
+                      <p className="text-blue-800 leading-relaxed text-lg">{latestDeliverable.message}</p>
                     </div>
                   </div>
                 </div>
               )}
 
-
               {latestDeliverable.files && latestDeliverable.files.length > 0 ? (
-                <div className="space-y-3">
-                  <h3 className="text-lg font-medium text-gray-700 mb-4">
+                <div className="space-y-4">
+                  <h3 className="text-2xl font-semibold text-slate-800 mb-6">
                     Files ({latestDeliverable.files.length})
                   </h3>
                   {latestDeliverable.files.map((fileUrl, index) => {
@@ -257,22 +262,26 @@ const ClientDeliverables = () => {
                     return (
                       <div
                         key={index}
-                        className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                        className="flex items-center justify-between p-6 bg-gradient-to-r from-slate-50 to-slate-100 rounded-xl hover:from-slate-100 hover:to-slate-200 transition-all duration-300 border border-slate-200 hover:border-slate-300"
                       >
-                        <div className="flex items-center space-x-3">
+                        <div className="flex items-center space-x-4">
                           {getFileIcon(fileName)}
                           <div>
-                            <p className="font-medium text-gray-800">{fileName}</p>
-                            <p className="text-sm text-gray-500">
-                              Uploaded {new Date(latestDeliverable.submittedAt).toLocaleDateString()}
+                            <p className="font-semibold text-slate-900 text-lg">{fileName}</p>
+                            <p className="text-slate-500 font-medium">
+                              Uploaded {new Date(latestDeliverable.submittedAt).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric'
+                              })}
                             </p>
                           </div>
                         </div>
                         <button
                           onClick={() => handleDownload(fileUrl, fileName)}
-                          className="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                          className="flex items-center px-6 py-3 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-indigo-800 transition-all duration-300 shadow-lg hover:shadow-xl"
                         >
-                          <Download className="w-4 h-4 mr-2" />
+                          <Download className="w-5 h-5 mr-2" />
                           Download
                         </button>
                       </div>
@@ -280,51 +289,55 @@ const ClientDeliverables = () => {
                   })}
                 </div>
               ) : (
-                <div className="text-center py-8 text-gray-500">
-                  <FileText className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-                  <p>No files have been uploaded yet.</p>
+                <div className="text-center py-12 text-slate-500">
+                  <FileText className="w-16 h-16 mx-auto mb-4 text-slate-300" />
+                  <p className="text-xl font-medium">No files have been uploaded yet.</p>
                 </div>
               )}
 
-
-              <div className="mt-6 pt-6 border-t border-gray-200">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center text-sm text-gray-500">
-                    <Calendar className="w-4 h-4 mr-2" />
-                    Delivered on {new Date(latestDeliverable.submittedAt).toLocaleString()}
+              <div className="mt-8 pt-6 border-t border-slate-200">
+                <div className="flex items-center justify-between flex-wrap gap-4">
+                  <div className="flex items-center text-slate-500 font-medium">
+                    <Calendar className="w-5 h-5 mr-3" />
+                    Delivered on {new Date(latestDeliverable.submittedAt).toLocaleString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
                   </div>
                   {latestDeliverable.provider && (
-                    <div className="flex items-center text-sm text-gray-500">
-                      <User className="w-4 h-4 mr-2" />
+                    <div className="flex items-center text-slate-500 font-medium">
+                      <User className="w-5 h-5 mr-3" />
                       {latestDeliverable.provider.name}
                     </div>
                   )}
                 </div>
               </div>
 
-
               {deliverables.length > 1 && (
-                <div className="mt-4 p-3 bg-gray-50 rounded-lg">
-                  <p className="text-sm text-gray-600">
-                    Showing latest delivery. Total deliveries: {deliverables.length}
+                <div className="mt-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                  <p className="text-slate-600 font-medium">
+                    Showing latest delivery. Total deliveries: <span className="font-bold text-slate-800">{deliverables.length}</span>
                   </p>
                 </div>
               )}
             </div>
           ) : (
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <div className="text-center py-12">
-                <Clock className="w-16 h-16 mx-auto text-gray-300 mb-4" />
-                <h3 className="text-xl font-semibold text-gray-700 mb-2">
+            <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-200">
+              <div className="text-center py-16">
+                <Clock className="w-20 h-20 mx-auto text-slate-300 mb-6" />
+                <h3 className="text-3xl font-bold text-slate-800 mb-4 font-serif">
                   Deliverables Pending
                 </h3>
-                <p className="text-gray-500 mb-6">
+                <p className="text-slate-500 mb-8 text-lg leading-relaxed max-w-md mx-auto">
                   Your service provider is still working on this project. 
                   Deliverables will appear here once they are uploaded.
                 </p>
                 <button
                   onClick={fetchDeliverables}
-                  className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+                  className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-indigo-800 transition-all duration-300 shadow-lg hover:shadow-xl"
                 >
                   Refresh
                 </button>

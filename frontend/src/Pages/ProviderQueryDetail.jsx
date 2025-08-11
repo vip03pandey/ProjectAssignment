@@ -22,6 +22,7 @@ const ProviderQueryDetail = () => {
 
   useEffect(() => {
     const foundQuery = mockQueries.find(q => q.id === queryId);
+    
     setQuery(foundQuery);
   }, [queryId]);
 

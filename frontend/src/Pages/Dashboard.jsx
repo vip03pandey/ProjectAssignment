@@ -49,6 +49,7 @@ const Dashboard = () => {
       setError(null);
       const res = await api.get("/client/my-queries");
       const data = res.data || [];
+      
       setQueries(data);
       calculateStats(data);
     } catch (err) {
