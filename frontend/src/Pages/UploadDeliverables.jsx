@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ChevronRight, Upload, FileText, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 import axios from 'axios';
+import { toast } from 'sonner';
 
 const UploadDeliverables = () => {
   const { queryId } = useParams();
@@ -49,12 +50,13 @@ const UploadDeliverables = () => {
 
       if (response.status === 201) {
         setUploadStatus('success');
+        toast.success('Deliverables uploaded successfully!');
         setTimeout(() => {
           navigate('/service-provider');
         }, 2000);
       }
     } catch (error) {
-      console.error('Upload error:', error);
+      toast.error('Upload error:', error);
       setUploadStatus('error');
     } finally {
       setIsUploading(false);

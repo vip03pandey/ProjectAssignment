@@ -143,7 +143,6 @@ router.post('/quotes/:queryId', protect, async (req, res) => {
   const { breakdown } = req.body;
 
   try {
-    // Check if query exists
     const query = await Query.findById(queryId);
     if (!query) {
       return res.status(404).json({ error: 'Query not found' });

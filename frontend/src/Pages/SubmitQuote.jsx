@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ChevronRight, XCircle } from 'lucide-react';
 import axios from 'axios';
+import { toast } from 'sonner';
 
 // Configure axios base URL (adjust according to your backend URL)
 
@@ -63,14 +64,14 @@ const SubmitQuote = () => {
       );
 
       console.log('Quote submitted successfully:', response.data);
-      
+      toast.success('Quote submitted successfully!');
 
       navigate('/service-provider', { 
         state: { message: 'Quote submitted successfully!' } 
       });
       
     } catch (error) {
-      console.error('Error submitting quote:', error);
+      toast.error('Error submitting quote:', error);
       
       if (error.response?.status === 401) {
         setError('Authentication required. Please log in again.');

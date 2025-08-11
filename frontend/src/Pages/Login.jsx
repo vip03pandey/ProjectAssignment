@@ -7,6 +7,7 @@ import { Boxes } from "../Components/ui/background-boxes";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export function SignIn() {
   const { login } = useAuth();
@@ -32,14 +33,14 @@ export function SignIn() {
 
       if (data.success) {
         login(data.user, data.token); 
-        alert("Login successful!");
+        toast.success("Login successful!");
         if (data.user.role === 'provider') {
           navigate("/service-provider");
         } else {
           navigate("/dashboard");
         }
       } else {
-        alert(data.message || "Login failed");
+        toast.error(data.message || "Login failed");
       }
     } catch (error) {
       console.error("Login error:", error);

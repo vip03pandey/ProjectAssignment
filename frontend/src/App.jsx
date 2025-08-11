@@ -14,17 +14,35 @@ import NewQuery from './Pages/NewQuery'
 import { AuthProvider } from './context/AuthContext'
 import QueryDetail from './Pages/QueryDetail';
 import ClientDeliverables from './Pages/ShowDeliverables'
+import ProtectedRoute from './lib/ProtectedRoutes'
+import ApprovedQuote from './Pages/AssignedPage'
+import { Toaster } from 'sonner';
 const App = () => {
   return (
     <AuthProvider>
       <BrowserRouter>
+       <Toaster position="top-right" reverseOrder={false}/>
         <Routes>
           <Route path="/" element={<UserLayout />}>
             <Route index element={<BackgroundLinesDemo />} />
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/service-provider" element={<ServiceProviderDashboard />} />
+              <Route 
+              path="/dashboard" 
+              element={
+                <ProtectedRoute allowedRoles={["client"]}>
+                  <Dashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+            path="/service-provider" 
+            element={
+              <ProtectedRoute allowedRoles={["provider"]}>
+                <ServiceProviderDashboard />
+              </ProtectedRoute>
+            } 
+          />
             <Route path="/provider-query/:queryId" element={<ProviderQueryDetail />} />
             <Route path="/submit-quote/:queryId" element={<SubmitQuote />} />
             <Route path="/upload-deliverables/:queryId" element={<UploadDeliverables />} />
@@ -32,6 +50,7 @@ const App = () => {
             <Route path="/query/:queryId" element={<QueryDetail />} />
             <Route path="/new-query" element={<NewQuery />} />
             <Route path="/deliverables/:queryId" element={<ClientDeliverables />} />
+            <Route path='/assigned-to/:queryId' element={<ApprovedQuote/>} />
           </Route>
         </Routes>
       </BrowserRouter>

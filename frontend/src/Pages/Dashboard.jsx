@@ -81,7 +81,7 @@ const Dashboard = () => {
     if (status === "pending" || status === "new" ) {
       navigate(`/quote-review?queryId=${query._id}`);
     } else if (status === "in-progress" || status === "approved") {
-      navigate(`/assigned-to/${query.assignedTo || "unknown"}`);
+      navigate(`/assigned-to/${query._id || "unknown"}`);
     } else if (status === "completed" || status === "submitted") {
       navigate(`/deliverables/${query._id}`);
     } else {

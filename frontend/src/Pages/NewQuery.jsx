@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Upload, FileText, Plus, X, Send, AlertCircle, Calendar, User, Loader2 } from 'lucide-react';
 import { Boxes } from '../Components/ui/background-boxes';
+import { toast } from 'sonner';
+import { useNavigate } from 'react-router';
 
 const NewQuery = () => {
   const [queryData, setQueryData] = useState({
@@ -14,6 +16,7 @@ const NewQuery = () => {
     questions: [''],
     attachments: [],
   });
+  const navigate=useNavigate();
 
   const [isDragging, setIsDragging] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -176,7 +179,7 @@ const NewQuery = () => {
       });
       
       if (response.status === 201) {
-        alert('Regulatory query submitted successfully!');
+        toast('Regulatory query submitted successfully!');
         setQueryData({
           title: '',
           regulatoryArea: '',
@@ -186,9 +189,11 @@ const NewQuery = () => {
           questions: [''],
           attachments: [],
         });
+        navigate('/dashboard')
+        
       }
     } catch (error) {
-      console.error('Submission error:', error);
+      toast.error('Submission error:', error);
       
       if (error.response) {
         const message = error.response.data?.message || 'Failed to submit query';

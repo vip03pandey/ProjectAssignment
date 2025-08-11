@@ -146,10 +146,9 @@ router.patch('/:quoteId/approve', protect, clientOnly, async (req, res) => {
     if (alreadyApproved) {
       return res.status(400).json({ message: 'Another quote has already been approved for this query' });
     }
-    quote.approved = true;
+    quote.status = "Approved";
     await quote.save();
-
-    query.status = 'Approved';
+    query.approvedProvider = quote.provider; 
     await query.save();
 
     res.status(200).json({
@@ -161,6 +160,7 @@ router.patch('/:quoteId/approve', protect, clientOnly, async (req, res) => {
     res.status(500).json({ message: 'Failed to approve quote', error: error.message });
   }
 });
+
 
 
 router.patch('/:quoteId/reject', protect, clientOnly, async (req, res) => {
@@ -193,6 +193,29 @@ router.patch('/:quoteId/reject', protect, clientOnly, async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Failed to reject quote', error: error.message });
+  }
+});
+
+
+router.get("/approved-quote/:queryId", protect, async (req, res) => {
+  try {
+    const { queryId } = req.params;
+
+    const approvedQuote = await Quote.findOne({
+      query: queryId,       
+      status: "Approved",
+    })
+      .populate("query")
+      .populate("provider");
+
+    if (!approvedQuote) {
+      return res.status(404).json({ error: "Approved quote not found" });
+    }
+
+    res.json(approvedQuote);
+  } catch (err) {
+    console.error("Error fetching approved quote:", err);
+    res.status(500).json({ error: "Server error" });
   }
 });
 

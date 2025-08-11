@@ -174,7 +174,7 @@ const ClientDeliverables = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 py-12 px-4">
       <div className="max-w-5xl mx-auto">
         <button
-          onClick={() => navigate('/client')}
+          onClick={() => navigate('/dashboard')}
           className="flex items-center text-indigo-700 hover:text-indigo-900 mb-8 font-medium transition-colors duration-200"
         >
           <ChevronRight className="w-5 h-5 rotate-180 mr-2" />
@@ -188,7 +188,7 @@ const ClientDeliverables = () => {
           </h1>
           {query && (
             <div className="space-y-4">
-              <p className="text-2xl text-slate-700 font-medium leading-relaxed">{query.title}</p>
+              <p className="text-2xl text-slate-700 font-bold leading-relaxed">{query.title}</p>
               <div className="flex items-center justify-center space-x-6 flex-wrap gap-2">
                 <span className="text-sm text-slate-500 font-mono bg-slate-100 px-3 py-1 rounded-lg">
                   Query ID: {queryId}
@@ -206,7 +206,7 @@ const ClientDeliverables = () => {
               <div className="grid md:grid-cols-2 gap-8">
                 <div>
                   <h3 className="text-xl font-semibold text-slate-800 mb-3">Description</h3>
-                  <p className="text-slate-600 leading-relaxed text-lg">{query.description}</p>
+                  <p className="text-slate-600 leading-relaxed text-lg">{query.context}</p>
                 </div>
                 <div className="space-y-6">
                   <div>

@@ -8,6 +8,7 @@ import { cn } from "../lib/utils";
 import { Boxes } from "../Components/ui/background-boxes";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
+import { toast } from "sonner";
 export function SignUp() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -48,14 +49,14 @@ export function SignUp() {
       if (data.success) {
         login(data.user, data.token);
   
-        alert("Signup successful!");
+        toast.success("Signup successful!");
         if (data.user.role === 'provider') {
           navigate("/service-provider");
         } else {
           navigate("/dashboard");
         } 
       } else {
-        alert(data.message || "Signup failed");
+        toast.error(data.message || "Signup failed");
       }
     } catch (error) {
       console.error("Error:", error);
