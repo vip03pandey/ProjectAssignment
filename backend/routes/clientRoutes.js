@@ -142,17 +142,27 @@ router.patch('/:quoteId/approve', protect, clientOnly, async (req, res) => {
     if (query.client.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: 'You are not authorized to approve this quote' });
     }
-    const alreadyApproved = await Quote.findOne({ query: query._id, approved: true });
+    const alreadyApproved = await Quote.findOne({ query: query._id, status: 'Approved' });
     if (alreadyApproved) {
       return res.status(400).json({ message: 'Another quote has already been approved for this query' });
     }
     quote.status = "Approved";
     await quote.save();
-    query.approvedProvider = quote.provider; 
+    await Quote.updateMany(
+      { 
+        query: query._id, 
+        _id: { $ne: quote._id }, 
+        status: 'Pending' 
+      },
+      { status: 'Rejected' }
+    );
+
+    query.approvedProvider = quote.provider;
+    query.status = 'Approved';
     await query.save();
 
     res.status(200).json({
-      message: 'Quote approved successfully',
+      message: 'Quote approved successfully and other quotes closed',
       approvedQuote: quote,
     });
   } catch (error) {

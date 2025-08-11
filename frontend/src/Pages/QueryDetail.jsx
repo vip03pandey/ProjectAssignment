@@ -26,7 +26,7 @@ const QueryDetail = () => {
         return;
       }
       
-      const response = await axios.get(`${API_BASE_URL}/api/provider/queries/${queryId}`, {
+      const response = await axios.get(`${API_BASE_URL}/api/provider/query/${queryId}/details`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -49,6 +49,24 @@ const QueryDetail = () => {
       }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDownloadAttachment = async (fileUrl, fileName) => {
+    try {
+      const response = await fetch(fileUrl);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = fileName || 'download';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error('Download failed:', error);
+      window.open(fileUrl, '_blank');
     }
   };
 
@@ -247,12 +265,28 @@ if (loading) return (
               <div>
                 <h3 className="text-2xl font-black text-gray-900 mb-4">Attachments</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {query.attachments.map((attachment, index) => (
-                    <div key={index} className="flex items-center p-4 rounded-xl cursor-pointer group">
-                      <FileText className="w-6 h-6 mr-3 text-blue-900 group-hover:text-blue-800" />
-                      <span className="text-blue-600 font-semibold">{attachment}</span>
-                    </div>
-                  ))}
+                  {query.attachments.map((attachment, index) => {
+                    const fileName = typeof attachment === 'string' ? attachment.split('/').pop() || `Attachment ${index + 1}` : `Attachment ${index + 1}`;
+                    const fileUrl = typeof attachment === 'string' ? attachment : attachment.url || attachment;
+                    
+                    return (
+                      <div key={index} className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200 hover:from-blue-100 hover:to-indigo-100 transition-all duration-300">
+                        <div className="flex items-center">
+                          <FileText className="w-6 h-6 mr-3 text-blue-900" />
+                          <span className="text-blue-800 font-semibold">{fileName}</span>
+                        </div>
+                        <button
+                          onClick={() => handleDownloadAttachment(fileUrl, fileName)}
+                          className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 text-sm font-medium"
+                        >
+                          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                          Download
+                        </button>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -316,7 +350,7 @@ if (loading) return (
                 </button>
               )}
               
-              {query.status === 'Approved' && (
+              {query.isApprovedProvider && (
                 <button
                   onClick={() => navigate(`/upload-deliverables/${query.id}`)}
                   className="px-8 py-3 bg-green-600 text-white rounded-xl font-bold hover:bg-green-700 transition-colors"

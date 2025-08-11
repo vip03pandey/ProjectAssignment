@@ -61,14 +61,30 @@ const ClientDeliverables = () => {
     }
   };
 
-  const handleDownload = (fileUrl, fileName) => {
-    const link = document.createElement('a');
-    link.href = fileUrl;
-    link.download = fileName || 'download';
-    link.target = '_blank';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const handleDownload = async (fileUrl, fileName) => {
+    try {
+      // For Cloudinary URLs, we need to handle CORS and force download
+      const response = await fetch(fileUrl);
+      const blob = await response.blob();
+      
+      // Create a blob URL for the file
+      const blobUrl = window.URL.createObjectURL(blob);
+      
+      // Create download link
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = fileName || 'download';
+      document.body.appendChild(link);
+      link.click();
+      
+      // Clean up
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error('Download failed:', error);
+      // Fallback: open in new tab if direct download fails
+      window.open(fileUrl, '_blank');
+    }
   };
 
   const getFileIcon = (fileName) => {

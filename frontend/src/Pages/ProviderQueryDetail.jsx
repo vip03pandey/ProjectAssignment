@@ -28,12 +28,12 @@ const ProviderQueryDetail = () => {
 
   if (!query) {
     return (
-      <div className="min-h-screen bg-gray-50 py-12 px-4">
+      <div className="min-h-screen bg-gray-50 py-6 sm:py-12 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Query Not Found</h1>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Query Not Found</h1>
           <button
             onClick={() => navigate('/service-provider')}
-            className="px-6 py-3 bg-indigo-600 text-white rounded-lg"
+            className="px-4 sm:px-6 py-2 sm:py-3 bg-indigo-600 text-white rounded-lg text-sm sm:text-base"
           >
             Back to Dashboard
           </button>
@@ -43,33 +43,33 @@ const ProviderQueryDetail = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4">
+    <div className="min-h-screen bg-gray-50 py-6 sm:py-12 px-4">
       <div className="max-w-6xl mx-auto">
         <button
           onClick={() => navigate('/service-provider')}
-          className="flex items-center text-indigo-600 hover:text-indigo-800 mb-6"
+          className="flex items-center text-indigo-600 hover:text-indigo-800 mb-4 sm:mb-6 text-sm sm:text-base"
         >
-          <ChevronRight className="w-5 h-5 rotate-180 mr-2" />
+          <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 rotate-180 mr-1 sm:mr-2" />
           Back to Dashboard
         </button>
 
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-          <div className="p-6 border-b">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">{query.title}</h1>
-            <p className="text-gray-600">Query ID: {query.id}</p>
+          <div className="p-4 sm:p-6 border-b">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2">{query.title}</h1>
+            <p className="text-sm sm:text-base text-gray-600">Query ID: {query.id}</p>
           </div>
 
-          <div className="p-6 space-y-6">
+          <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
             <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Description</h3>
-              <p className="text-gray-700">{query.description}</p>
+              <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">Description</h3>
+              <p className="text-sm sm:text-base text-gray-700">{query.description}</p>
             </div>
 
-            <div className="flex justify-end space-x-4">
+            <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4">
               {query.status === 'New' && (
                 <button
                   onClick={() => navigate(`/submit-quote/${query.id}`)}
-                  className="px-6 py-3 bg-green-600 text-white rounded-lg"
+                  className="px-4 sm:px-6 py-2 sm:py-3 bg-green-600 text-white rounded-lg text-sm sm:text-base w-full sm:w-auto"
                 >
                   Submit Quote
                 </button>
@@ -78,7 +78,7 @@ const ProviderQueryDetail = () => {
               {query.status === 'Approved' && (
                 <button
                   onClick={() => navigate(`/upload-deliverables/${query.id}`)}
-                  className="px-6 py-3 bg-green-600 text-white rounded-lg"
+                  className="px-4 sm:px-6 py-2 sm:py-3 bg-green-600 text-white rounded-lg text-sm sm:text-base w-full sm:w-auto"
                 >
                   Upload Deliverables
                 </button>

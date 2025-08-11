@@ -64,22 +64,47 @@ router.get('/queries', protect, providerOnly, async (req, res) => {
     const totalQueries = await Query.countDocuments(filter);
     
 
-    const transformedQueries = queries.map(query => ({
-      id: query._id,
-      title: query.title,
-      description: query.context,
-      detailedQuestions: query.questions?.join(' ') || '',
-      status: query.status,
-      priority: query.priority,
-      clientName: query.client?.name || 'Unknown Client',
-      clientEmail: query.client?.email,
-      submittedDate: query.createdAt.toISOString().split('T')[0],
-      lastUpdated: query.updatedAt ? query.updatedAt.toISOString().split('T')[0] : query.createdAt.toISOString().split('T')[0],
-      deadline: query.deadline ? query.deadline.toISOString().split('T')[0] : null,
-      regulatoryArea: query.regulatoryArea,
-      attachments: query.attachments || [],
-      approvedProvider: query.approvedProvider
-    }));
+    // Get all query IDs to fetch provider quotes in bulk
+    const queryIds = queries.map(q => q._id);
+    const providerQuotes = await Quote.find({
+      query: { $in: queryIds },
+      provider: req.user._id
+    });
+
+    // Create a map for quick lookup
+    const quoteMap = {};
+    providerQuotes.forEach(quote => {
+      quoteMap[quote.query.toString()] = quote;
+    });
+
+    const transformedQueries = queries.map(query => {
+      const providerQuote = quoteMap[query._id.toString()];
+      const isApprovedProvider = query.approvedProvider && query.approvedProvider._id.toString() === req.user._id.toString();
+      
+      return {
+        id: query._id,
+        title: query.title,
+        description: query.context,
+        detailedQuestions: query.questions?.join(' ') || '',
+        status: query.status,
+        priority: query.priority,
+        clientName: query.client?.name || 'Unknown Client',
+        clientEmail: query.client?.email,
+        submittedDate: query.createdAt.toISOString().split('T')[0],
+        lastUpdated: query.updatedAt ? query.updatedAt.toISOString().split('T')[0] : query.createdAt.toISOString().split('T')[0],
+        deadline: query.deadline ? query.deadline.toISOString().split('T')[0] : null,
+        regulatoryArea: query.regulatoryArea,
+        attachments: query.attachments || [],
+        approvedProvider: query.approvedProvider,
+        providerQuote: providerQuote ? {
+          id: providerQuote._id,
+          status: providerQuote.status,
+          total: providerQuote.total,
+          submittedAt: providerQuote.submittedAt
+        } : null,
+        isApprovedProvider: isApprovedProvider
+      };
+    });
     
     res.json({
       queries: transformedQueries,
@@ -224,6 +249,27 @@ router.post(
         if (!query) {
           return res.status(404).json({ message: 'Query not found' });
         }
+
+        // Check 
+        const approvedQuote = await Quote.findOne({
+          query: query._id,
+          provider: req.user._id,
+          status: 'Approved'
+        });
+
+        if (!approvedQuote) {
+          return res.status(403).json({ 
+            message: 'You are not authorized to upload deliverables. Your quote was not approved for this query.' 
+          });
+        }
+
+        // Additional check
+        if (query.approvedProvider.toString() !== req.user._id.toString()) {
+          return res.status(403).json({ 
+            message: 'You are not the approved provider for this query.' 
+          });
+        }
+
         console.log("HEADERS RECEIVED:", req.headers);
   
         const fileUrls = [];
@@ -256,6 +302,42 @@ router.post(
     }
   );
 
+  // Get query details with provider's quote status
+  router.get('/query/:queryId/details', protect, providerOnly, async (req, res) => {
+    try {
+      const query = await Query.findById(req.params.queryId)
+        .populate('client', 'name email')
+        .populate('approvedProvider', 'name email');
+      
+      if (!query) {
+        return res.status(404).json({ message: 'Query not found' });
+      }
+
+      // Get the current provider's quote for this query
+      const providerQuote = await Quote.findOne({
+        query: req.params.queryId,
+        provider: req.user._id
+      });
+
+      const responseData = {
+        ...query.toObject(),
+        providerQuote: providerQuote ? {
+          id: providerQuote._id,
+          status: providerQuote.status,
+          total: providerQuote.total,
+          submittedAt: providerQuote.submittedAt
+        } : null,
+        isApprovedProvider: query.approvedProvider && query.approvedProvider._id.toString() === req.user._id.toString()
+      };
+
+      res.status(200).json(responseData);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Failed to fetch query details', error: error.message });
+    }
+  });
+
+  // Get deliverables for a query
   router.get('/query/:queryId', protect, async (req, res) => {
     try {
       const deliverables = await Deliverable.find({ query: req.params.queryId })

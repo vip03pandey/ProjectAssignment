@@ -87,6 +87,24 @@ const QueryDetail = () => {
     fetchQuery();
   }, [id]);
 
+  const handleDownloadAttachment = async (fileUrl, fileName) => {
+    try {
+      const response = await fetch(fileUrl);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = fileName || 'download';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error('Download failed:', error);
+      window.open(fileUrl, '_blank');
+    }
+  };
+
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -163,7 +181,7 @@ const QueryDetail = () => {
           </div>
         </header>
 
-        {/* Main Content */}
+
         <main className="space-y-8">
           <div className="bg-white rounded-2xl shadow-sm border overflow-hidden">
             <div className="px-8 py-6 border-b border-slate-100 bg-slate-50">
@@ -226,19 +244,31 @@ const QueryDetail = () => {
                 <div className="bg-green-50 p-6 rounded-xl border border-green-100">
                   <h3 className="text-2xl font-bold text-slate-900 mb-4">Attachments</h3>
                   <div className="space-y-4">
-                    {query.attachments.map((attachment, index) => (
-                      <a
-                        key={index}
-                        href={attachment}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group flex items-center text-lg font-medium text-blue-600 hover:text-blue-800 transition-all duration-300 p-4 bg-white rounded-xl border hover:shadow-md hover:scale-[1.02]"
-                        aria-label={`Download attachment: ${attachment}`}
-                      >
-                        <FileText className="w-6 h-6 mr-4 group-hover:scale-110 transition-transform duration-300 text-blue-500" />
-                        <span className="truncate">{attachment}</span>
-                      </a>
-                    ))}
+                    {query.attachments.map((attachment, index) => {
+                      const fileName = typeof attachment === 'string' ? attachment.split('/').pop() || `Attachment ${index + 1}` : `Attachment ${index + 1}`;
+                      const fileUrl = typeof attachment === 'string' ? attachment : attachment.url || attachment;
+                      
+                      return (
+                        <div
+                          key={index}
+                          className="flex items-center justify-between p-4 bg-white rounded-xl border hover:shadow-md transition-all duration-300"
+                        >
+                          <div className="flex items-center">
+                            <FileText className="w-6 h-6 mr-4 text-blue-500" />
+                            <span className="text-lg font-medium text-slate-900 truncate">{fileName}</span>
+                          </div>
+                          <button
+                            onClick={() => handleDownloadAttachment(fileUrl, fileName)}
+                            className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 text-sm font-medium"
+                          >
+                            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Download
+                          </button>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               )}

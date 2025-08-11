@@ -77,7 +77,7 @@ export function BackgroundLinesDemo() {
           </div>
         </div>
 
-        {/* Testimonials */}
+
         <div className="w-full">
           <InfiniteMovingCardsDemo/>
         </div>

@@ -4,8 +4,6 @@ import { ChevronRight, XCircle } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'sonner';
 
-// Configure axios base URL (adjust according to your backend URL)
-
 
 const SubmitQuote = () => {
   const { queryId } = useParams();

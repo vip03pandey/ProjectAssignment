@@ -16,7 +16,7 @@ app.get("/", (req, res) => {
 
 const PORT=process.env.PORT || 5000;
 const allowedOrigins = [
-  'http://localhost:5173', // for local dev
+  'http://localhost:5173', 
   'https://project-assignment-gamma.vercel.app' 
 ];
 
