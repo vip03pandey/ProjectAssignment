@@ -29,14 +29,17 @@ export function NavbarDemo() {
     {
       name: "About Us",
       link: "#features",
+      isAnchor: true
     },
     {
       name: "Contact Us",
       link: "#pricing",
+      isAnchor: true
     },
     {
       name: "Dashboard",
-      link: getDashboardLink()
+      link: getDashboardLink(),
+      isAnchor: false
     }
   ];
 
@@ -46,12 +49,37 @@ export function NavbarDemo() {
     logout();
     navigate("/");
   };
+
+
+  const handleNavigation = (link, isAnchor = false) => {
+    if (isAnchor) {
+      const element = document.querySelector(link);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      navigate(link);
+    }
+    setIsMobileMenuOpen(false);
+  };
+
   return (
     <div className="relative w-full">
       <Navbar className="!bg-white !text-1xl !text-blaxck">
         <NavBody className="!text-black">
           <NavbarLogo />
-          <NavItems items={navItems} className="!text-black !hover:text-white" />
+          {/* Replace NavItems with custom navigation */}
+          <div className="hidden md:flex items-center space-x-8">
+            {navItems.map((item, idx) => (
+              <button
+                key={`desktop-link-${idx}`}
+                onClick={() => handleNavigation(item.link, item.isAnchor)}
+                className="text-black hover:text-gray-600 font-bold transition-colors duration-200 bg-transparent border-none cursor-pointer"
+              >
+                {item.name}
+              </button>
+            ))}
+          </div>
           <div className="flex items-center gap-4">
             {loading ? (
               <div className="text-sm text-gray-500">Loading...</div>
@@ -89,13 +117,12 @@ export function NavbarDemo() {
 
           <MobileNavMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)}>
             {navItems.map((item, idx) => (
-              <a
+              <button
                 key={`mobile-link-${idx}`}
-                href={item.link}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="relative text-neutral-600 dark:text-neutral-300">
+                onClick={() => handleNavigation(item.link, item.isAnchor)}
+                className="relative text-neutral-600 dark:text-neutral-300 text-left w-full bg-transparent border-none cursor-pointer">
                 <span className="block">{item.name}</span>
-              </a>
+              </button>
             ))}
             <div className="flex w-full flex-col gap-4">
               {loading ? (

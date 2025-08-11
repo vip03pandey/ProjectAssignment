@@ -125,16 +125,17 @@ const ClientDeliverables = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center">
-        <div className="flex items-center space-x-3 bg-white px-8 py-6 rounded-2xl shadow-lg border border-slate-200">
-          <Loader2 className="w-7 h-7 animate-spin text-indigo-600" />
-          <span className="text-slate-700 font-medium text-lg">Loading deliverables...</span>
-        </div>
+if (loading) return (
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50">
+      <div className="flex items-center space-x-2 text-indigo-600 animate-pulse">
+        <svg className="animate-spin h-6 w-6" viewBox="0 0 24 24">
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+        </svg>
+        <p className="text-lg font-medium">Loading ...</p>
       </div>
-    );
-  }
+    </div>
+  );
 
   if (error) {
     return (

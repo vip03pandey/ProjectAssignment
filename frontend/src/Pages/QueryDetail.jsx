@@ -124,25 +124,17 @@ const QueryDetail = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50/30 to-purple-50/30 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="animate-pulse space-y-8">
-            <div className="h-16 bg-gray-200 rounded-2xl w-1/3"></div>
-            <div className="bg-white p-8 rounded-3xl shadow-sm">
-              <div className="h-8 bg-gray-200 rounded w-1/4 mb-8"></div>
-              <div className="space-y-6">
-                {[1, 2, 3, 4, 5].map(i => (
-                  <div key={i} className="h-4 bg-gray-200 rounded w-full"></div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
+if (loading) return (
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50">
+      <div className="flex items-center space-x-2 text-indigo-600 animate-pulse">
+        <svg className="animate-spin h-6 w-6" viewBox="0 0 24 24">
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+        </svg>
+        <p className="text-lg font-medium">Loading ...</p>
       </div>
-    );
-  }
+    </div>
+  );
 
   if (error) {
     return (
