@@ -13,6 +13,7 @@ import {
   Clock,
   CheckCircle2
 } from "lucide-react";
+import { SparklesCore } from "../Components/ui/sparkles";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -123,28 +124,23 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 p-8 font-sans">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-8 font-sans">
         <div className="max-w-7xl mx-auto">
           <div className="animate-pulse space-y-8">
-            <div className="h-16 bg-gray-200 rounded-2xl w-1/3"></div>
+            <div className="h-16 bg-white/60 backdrop-blur-sm rounded-2xl w-1/3 shadow-sm"></div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
               {[1, 2, 3, 4].map(i => (
-                <div key={i} className="bg-white p-8 rounded-3xl shadow-sm">
-                  <div className="h-5 bg-gray-200 rounded w-2/3 mb-4"></div>
-                  <div className="h-10 bg-gray-200 rounded w-1/2"></div>
+                <div key={i} className="bg-white/80 backdrop-blur-sm p-8 rounded-3xl shadow-lg border border-white/20">
+                  <div className="h-5 bg-slate-200 rounded w-2/3 mb-4"></div>
+                  <div className="h-10 bg-slate-200 rounded w-1/2"></div>
                 </div>
               ))}
             </div>
-            <div className="bg-white p-8 rounded-3xl shadow-sm">
-              <div className="h-8 bg-gray-200 rounded w-1/4 mb-8"></div>
+            <div className="bg-white/80 backdrop-blur-sm p-8 rounded-3xl shadow-lg border border-white/20">
+              <div className="h-8 bg-slate-200 rounded w-1/4 mb-8"></div>
               <div className="space-y-6">
-                {[1, 2, 3, 4, 5].map(i => (
-                  <div key={i} className="flex justify-between items-center">
-                    <div className="h-5 bg-gray-200 rounded w-1/4"></div>
-                    <div className="h-5 bg-gray-200 rounded w-1/6"></div>
-                    <div className="h-8 bg-gray-200 rounded-2xl w-20"></div>
-                    <div className="h-5 bg-gray-200 rounded w-1/6"></div>
-                  </div>
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="h-20 bg-slate-200 rounded-2xl"></div>
                 ))}
               </div>
             </div>
@@ -154,105 +150,115 @@ const Dashboard = () => {
     );
   }
 
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-8 font-sans">
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-white/90 backdrop-blur-sm p-12 rounded-3xl shadow-xl border border-white/20 text-center">
+            <div className="text-6xl mb-6">⚠️</div>
+            <h2 className="text-3xl font-black text-slate-800 mb-4">Something went wrong</h2>
+            <p className="text-xl text-slate-600 mb-8">{error}</p>
+            <button
+              onClick={fetchQueries}
+              className="bg-blue-600 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+            >
+              Try Again
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const filteredQueries = queries.filter(query => {
+    if (statusFilter === "all") return true;
+    return query.status?.toLowerCase() === statusFilter;
+  });
+
   return (
-    <div className="min-h-screen bg-gray-50 p-8 font-sans">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-8 font-sans">
+      {/* Decorative background elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-200/30 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-indigo-200/20 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-cyan-200/20 rounded-full blur-3xl"></div>
+      </div>
+
+      <div className="max-w-7xl mx-auto space-y-8 relative z-10">
         {/* Header */}
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-          <div>
-            <h1 className="text-5xl lg:text-6xl font-black text-gray-900 mb-3 tracking-tight">
-              Overview
+        <div className="flex items-center justify-between">
+          <div className="bg-white/70 backdrop-blur-sm p-8 rounded-3xl shadow-lg border border-white/20">
+            <h1 className="text-5xl font-black bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent mb-2">
+              Welcome back, {user?.name || 'Client'}! 
             </h1>
-            <p className="text-2xl text-gray-600 font-semibold">
-              Welcome back, {user?.name || 'User'}!
+            <p className="text-xl text-slate-600 font-medium">
+              Here's what's happening with your queries today.
             </p>
           </div>
-          <div className="flex items-center gap-4">
-            <button className="flex items-center gap-3 bg-white border border-gray-200 rounded-2xl px-6 py-4 hover:bg-gray-50 transition-all duration-200 font-semibold text-gray-700 hover:shadow-sm">
-              <Filter size={20} />
-              Filter
-            </button>
-            <button className="flex items-center gap-3 bg-white border border-gray-200 rounded-2xl px-6 py-4 hover:bg-gray-50 transition-all duration-200 font-semibold text-gray-700 hover:shadow-sm">
-              <Calendar size={20} />
-              Monthly
-            </button>
-            <button className="flex items-center gap-3 bg-indigo-600 text-white rounded-2xl px-6 py-4 hover:bg-indigo-700 transition-all duration-200 font-semibold hover:shadow-lg"
-            onClick={() => navigate("/new-query")}
-            >
-              <Plus size={20} />
-              Add Query
-            </button>
-          </div>
+          <button className="relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
+          onClick={() => navigate('/new-query')}>
+          <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+          <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 text-medium font-medium text-white backdrop-blur-3xl">
+          <Plus size={24} />
+            New Query
+          </span>
+        </button>
         </div>
 
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div className="bg-white p-8 rounded-3xl shadow-sm border-0 hover:shadow-lg transition-all duration-300 group">
-            <div className="flex items-center justify-between mb-6">
-              <div className="p-4 bg-indigo-50 rounded-2xl">
-                <TrendingUp className="w-7 h-7 text-indigo-600" />
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="bg-white/80 backdrop-blur-sm p-5 rounded-2xl shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl shadow-inner">
+                <TrendingUp className="w-6 h-6 text-blue-600" />
               </div>
-              <ArrowUpRight className="w-6 h-6 text-gray-400 group-hover:text-indigo-600 transition-colors" />
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total</span>
             </div>
-            <div className="space-y-2">
-              <p className="text-gray-500 font-medium text-lg">Total Queries</p>
-              <h2 className="text-4xl font-black text-gray-900">{stats.total}</h2>
-              <p className="text-sm text-green-600 font-semibold">+12% from last month</p>
-            </div>
+            <div className="text-3xl font-black text-slate-800 mb-1">{stats.total}</div>
+            <p className="text-slate-600 font-semibold text-sm">All Queries</p>
           </div>
 
-
-          <div className="bg-white p-8 rounded-3xl shadow-sm border-0 hover:shadow-lg transition-all duration-300 group">
-            <div className="flex items-center justify-between mb-6">
-              <div className="p-4 bg-amber-50 rounded-2xl">
-                <Clock className="w-7 h-7 text-amber-600" />
+          <div className="bg-white/80 backdrop-blur-sm p-5 rounded-2xl shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 bg-gradient-to-br from-amber-100 to-orange-200 rounded-xl shadow-inner">
+                <Clock className="w-6 h-6 text-amber-600" />
               </div>
-              <ArrowUpRight className="w-6 h-6 text-gray-400 group-hover:text-amber-600 transition-colors" />
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">New</span>
             </div>
-            <div className="space-y-2">
-              <p className="text-gray-500 font-medium text-lg">New Queries</p>
-              <h2 className="text-4xl font-black text-gray-900">{stats.new}</h2>
-              <p className="text-sm text-amber-600 font-semibold">Pending review</p>
-            </div>
+            <div className="text-3xl font-black text-slate-800 mb-1">{stats.new}</div>
+            <p className="text-slate-600 font-semibold text-sm">Pending Review</p>
           </div>
 
-
-          <div className="bg-white p-8 rounded-3xl shadow-sm border-0 hover:shadow-lg transition-all duration-300 group">
-            <div className="flex items-center justify-between mb-6">
-              <div className="p-4 bg-blue-50 rounded-2xl">
-                <Users className="w-7 h-7 text-blue-600" />
+          <div className="bg-white/80 backdrop-blur-sm p-5 rounded-2xl shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 bg-gradient-to-br from-cyan-100 to-blue-200 rounded-xl shadow-inner">
+                <Users className="w-6 h-6 text-cyan-600" />
               </div>
-              <ArrowUpRight className="w-6 h-6 text-gray-400 group-hover:text-blue-600 transition-colors" />
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Active</span>
             </div>
-            <div className="space-y-2">
-              <p className="text-gray-500 font-medium text-lg">In Progress</p>
-              <h2 className="text-4xl font-black text-gray-900">{stats.inProgress}</h2>
-              <p className="text-sm text-blue-600 font-semibold">Being processed</p>
-            </div>
+            <div className="text-3xl font-black text-slate-800 mb-1">{stats.inProgress}</div>
+            <p className="text-slate-600 font-semibold text-sm">In Progress</p>
           </div>
 
-
-          <div className="bg-white p-8 rounded-3xl shadow-sm border-0 hover:shadow-lg transition-all duration-300 group">
-            <div className="flex items-center justify-between mb-6">
-              <div className="p-4 bg-green-50 rounded-2xl">
-                <CheckCircle2 className="w-7 h-7 text-green-600" />
+          <div className="bg-white/80 backdrop-blur-sm p-5 rounded-2xl shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 bg-gradient-to-br from-emerald-100 to-green-200 rounded-xl shadow-inner">
+                <CheckCircle2 className="w-6 h-6 text-emerald-600" />
               </div>
-              <ArrowUpRight className="w-6 h-6 text-gray-400 group-hover:text-green-600 transition-colors" />
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Done</span>
             </div>
-            <div className="space-y-2">
-              <p className="text-gray-500 font-medium text-lg">Completed</p>
-              <h2 className="text-4xl font-black text-gray-900">{stats.completed}</h2>
-              <p className="text-sm text-green-600 font-semibold">Successfully resolved</p>
-            </div>
+            <div className="text-3xl font-black text-slate-800 mb-1">{stats.completed}</div>
+            <p className="text-slate-600 font-semibold text-sm">Completed</p>
           </div>
         </div>
 
-
-        <div className="bg-white rounded-3xl shadow-sm border-0 overflow-hidden">
-          <div className="p-8 border-b border-gray-100">
+        {/* Queries Table */}
+        <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-lg border border-white/20 overflow-hidden">
+          <div className="p-8 border-b border-slate-200/50 bg-gradient-to-r from-slate-50/50 to-blue-50/50">
             <div className="flex items-center justify-between">
-              <h3 className="text-3xl font-black text-gray-900">Recent Queries</h3>
-              <button className="flex items-center gap-3 text-gray-600 hover:text-gray-900 font-semibold transition-colors rounded-2xl px-4 py-2 hover:bg-gray-50">
+              <h3 className="text-3xl font-black text-slate-800">Recent Queries</h3>
+              <button className="flex items-center gap-3 text-slate-600 hover:text-slate-800 font-semibold transition-colors rounded-2xl px-6 py-3 hover:bg-white/60 backdrop-blur-sm border border-white/30">
                 <Download size={20} />
                 Export Data
               </button>
@@ -262,31 +268,31 @@ const Dashboard = () => {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-100">
-                  <th className="text-left p-8 text-sm font-black text-gray-700 uppercase tracking-wider">
+                <tr className="bg-gradient-to-r from-slate-100/50 to-blue-100/50 border-b border-slate-200/50">
+                  <th className="text-left p-8 text-sm font-black text-slate-700 uppercase tracking-wider">
                     Query Title
                   </th>
-                  <th className="text-left p-8 text-sm font-black text-gray-700 uppercase tracking-wider">
+                  <th className="text-left p-8 text-sm font-black text-slate-700 uppercase tracking-wider">
                     Priority
                   </th>
-                  <th className="text-left p-8 text-sm font-black text-gray-700 uppercase tracking-wider">
+                  <th className="text-left p-8 text-sm font-black text-slate-700 uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="text-left p-8 text-sm font-black text-gray-700 uppercase tracking-wider">
+                  <th className="text-left p-8 text-sm font-black text-slate-700 uppercase tracking-wider">
                     Created Date
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-slate-200/50">
                 {queries.length === 0 ? (
                   <tr>
                     <td colSpan="4" className="p-12 text-center">
-                      <div className="flex flex-col items-center justify-center space-y-4">
-                        <div className="p-6 bg-gray-50 rounded-3xl">
-                          <TrendingUp className="w-10 h-10 text-gray-400" />
+                      <div className="flex flex-col items-center justify-center space-y-6">
+                        <div className="p-8 bg-gradient-to-br from-slate-100 to-blue-100 rounded-3xl shadow-inner">
+                          <TrendingUp className="w-12 h-12 text-slate-400" />
                         </div>
-                        <p className="text-xl font-bold text-gray-600">No queries found</p>
-                        <p className="text-lg text-gray-500 font-medium">Create your first query to get started</p>
+                        <p className="text-2xl font-bold text-slate-600">No queries found</p>
+                        <p className="text-lg text-slate-500 font-medium">Create your first query to get started</p>
                       </div>
                     </td>
                   </tr>
@@ -294,11 +300,11 @@ const Dashboard = () => {
                   queries.map((q) => (
                     <tr
                       key={q._id}
-                      className="hover:bg-gray-50 cursor-pointer transition-colors duration-200 group"
+                      className="hover:bg-white/60 cursor-pointer transition-all duration-200 group backdrop-blur-sm"
                       onClick={() => handleQueryClick(q)}
                     >
                       <td className="p-8">
-                        <div className="font-bold text-gray-900 text-xl group-hover:text-indigo-600 transition-colors">
+                        <div className="font-bold text-slate-800 text-xl group-hover:text-blue-600 transition-colors">
                           {q.title || 'Untitled Query'}
                         </div>
                       </td>
@@ -309,13 +315,13 @@ const Dashboard = () => {
                       </td>
                       <td className="p-8">
                         <span
-                          className={`inline-flex items-center px-4 py-2 rounded-2xl text-sm font-bold ${getStatusBadge(q.status)}`}
+                          className={`inline-flex items-center px-4 py-2 rounded-2xl text-sm font-bold shadow-sm ${getStatusBadge(q.status)}`}
                         >
                           {q.status || 'New'}
                         </span>
                       </td>
                       <td className="p-8">
-                        <span className="text-gray-600 font-semibold text-xl">
+                        <span className="text-slate-600 font-semibold text-xl">
                           {new Date(q.createdAt).toLocaleDateString("en-GB", {
                             day: 'numeric',
                             month: 'short',
